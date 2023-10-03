@@ -1,0 +1,40 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Poppins:ital,wght@0,200;0,400;0,500;0,600;0,800;0,900;1,200;1,600;1,700&family=Sail&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,200;0,400;0,500;0,600;0,800;0,900;1,200;1,600;1,700&family=Sail&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,200;0,400;0,500;0,600;0,800;0,900;1,200;1,600;1,700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  }
+
+/* Hide the default arrow */
+#dob::-webkit-calendar-picker-indicator {
+    display: none;
+    
+}
+
+.invisible-scrollbar {
+    scrollbar-width: none;
+}
+
+.invisible-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+/* Change the width of the ToastContainer */
+.Toastify__toast-container {
+  width: 300px; /* Set your desired width */
+}
+
+/* Change the position to be in the top-right corner */
+.Toastify__toast-container--top-right {
+  top: 60px; /* Adjust the top position as needed */
+  right: 10px; /* Adjust the right position as needed */
+}
+
