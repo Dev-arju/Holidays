@@ -6,7 +6,7 @@ import LogoIcon from "./LogoIcon";
 const Footer = () => {
   return (
     <>
-      <footer className="flex bg-black text-white flex-wrap-reverse justify-between  items-end font-body pb-2 pt-4 text-xs">
+      <footer className="flex  flex-wrap-reverse justify-between  items-end font-body pb-2 pt-4 text-xs">
         <main className="flex items-center self-center ml-8">
           <div className="hidden md:flex">
             <PiCopyrightBold />

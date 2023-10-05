@@ -1,10 +1,27 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { AiOutlineCaretLeft, AiOutlineCaretRight } from "react-icons/ai";
+import { BsFillPeopleFill } from "react-icons/bs";
+import Footer from "../components/Footer";
 const coverImage = "src/assets/munnar/attukal-waterfalls-munnar.jpg";
 const sampleImage = "src/assets/ayurveda-kerala-tourism.jpg";
 
 const HomePage = () => {
+  const featuredSection = useRef(null);
+  const location = useLocation();
+  useEffect(() => {
+    if (location.pathname === "/" && location.hash === "#featuredSection") {
+      scrollToFeaturedSection();
+    }
+  }, []);
+
+  const scrollToFeaturedSection = () => {
+    if (featuredSection.current) {
+      featuredSection.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   const handleMouseOver = (e) => {
     if (e.target === e.currentTarget) return;
     const images = e.currentTarget.querySelectorAll("img");
@@ -16,10 +33,11 @@ const HomePage = () => {
       return img.classList.replace("w-16", "w-36");
     });
   };
+
   return (
     <>
-      <Navbar />
-      <div className="w-full bg-bg-1 grid md:grid-cols-2 justify-center gap-4 items-center py-8">
+      <Navbar scrollToFeaturedSection={scrollToFeaturedSection} />
+      <div className="w-full bg-bg-1/40 grid md:grid-cols-2 justify-center gap-4 items-center py-8">
         <div className="flex justify-center md:justify-end">
           <div className="flex  gap-2" onMouseOver={(e) => handleMouseOver(e)}>
             <div className="overflow-hidden rounded-md transition ease-in-out  duration-300">
@@ -106,17 +124,161 @@ const HomePage = () => {
             </p>
           </div>
           <div className="font-body text-base text-blue-800 font-bold">
-            <button className="animate-rotate px-6 py-2 bg-white/60 rounded-md hover:bg-white/80 hover:shadow-md transition-all duration-300 shadow-lg">
+            <button className="animate-rotate px-6 py-2 bg-white/60 rounded-full hover:bg-white/80 hover:shadow-md transition-all duration-300 shadow-lg">
               more details
             </button>
           </div>
         </div>
       </div>
-      <div className="flex flex-wrap gap-4 justify-center font-body mt-6">
-        <div>
-          <img src={sampleImage} alt="" />
+      <div
+        className=" bg-bg-1/40 font-body mt-6 pt-4"
+        id="featuredSection"
+        ref={featuredSection}
+      >
+        <div className="flex justify-center items-center ">
+          <h2 className="font-title font-extrabold text-lg px-24 py-2 shadow-inner bg-white/60 ring ring-bg-1">
+            New & Featured
+          </h2>
         </div>
-        <div>ghjk</div>
+
+        <div className="package-wrapper mb-6 mt-4">
+          <div className="hidden  md:flex justify-center py-4 mx-4 mb-6 mt-4">
+            <div className="ps-6 pe-12 bg-bg-1/70 shadow-lg max-w-xl min-h-max rounded-l-md">
+              <h2 className="font-title mt-4 mb-3 text-lg font-bold text-green-700">
+                heaven holidays presents
+              </h2>
+              <h4 className="font-tabs font-semibold">
+                <span className="border-b-2 text-2xl leading-8 text-clip border-gray-400">
+                  Vagamon - Kuttikkanam
+                </span>
+              </h4>
+              <p className="text-xs font-body mt-4 mb-2">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Laudantium eos nostrum mollitia error dolorem ut at, odit ipsum
+                minima dignissimos voluptate excepturi nobis aut nam iste
+                delectus, sapiente, quod facilis!
+              </p>
+              <p className="font-body text-sm font-medium text-gray-600 mb-1">
+                2 days 1 night
+              </p>
+              <p className="flex gap-2 items-center font-body text-sm font-bold mb-4">
+                <span>
+                  <BsFillPeopleFill />
+                </span>
+                2
+              </p>
+              <button className="px-5 py-2 font-body rounded-md bg-primary mb-4 text-white">
+                see more
+              </button>
+            </div>
+            <div className="rounded-r-md w-64 relative overflow-hidden bg-bg-1/70 shadow-lg px-6 ring-1 ring-black/60">
+              <img
+                src="src/assets/ayurveda-kerala-tourism.jpg"
+                alt=""
+                className="absolute top-0 right-0 bottom-0 left-0"
+              />
+            </div>
+          </div>
+          <div className="md:hidden bg-cover bg-[url('src/assets/hill-stations-kerala-tourism.jpg')] bg-no-repeat overflow-hidden w-full">
+            <div className=" p-4 mx-4 mb-4 bg-white/20 hover:bg-white/60 mt-16  shadow-md">
+              <h2 className="font-title mt-4 mb-3 text-lg font-bold text-green-700">
+                heaven holidays presents
+              </h2>
+              <h4 className="font-tabs font-semibold">
+                <span className="border-b-2 text-2xl leading-8 text-clip border-gray-400 ">
+                  Vagamon - Kuttikkanam
+                </span>
+              </h4>
+              <p className="text-xs font-body mt-4 mb-2">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Laudantium eos nostrum mollitia error dolorem ut at, odit ipsum
+                minima dignissimos voluptate excepturi nobis aut nam iste
+                delectus, sapiente, quod facilis!
+              </p>
+              <p className="font-body font-bold text-sm">2 days 1 night</p>
+              <p className="flex gap-2 items-center font-body text-sm font-bold mb-4">
+                <span>
+                  <BsFillPeopleFill />
+                </span>
+                2
+              </p>
+              <button className="px-5 py-2 font-body rounded-md bg-primary mb-4 text-white">
+                see more
+              </button>
+            </div>
+          </div>
+        </div>
+        <div className="package-wrapper mb-6 mt-4">
+          <div className="hidden  md:flex justify-center py-4 mx-4 mb-6 mt-4">
+            <div className="ps-6 pe-12 bg-bg-1/70 shadow-lg max-w-xl min-h-max rounded-l-md">
+              <h2 className="font-title mt-4 mb-3 text-lg font-bold text-green-700">
+                heaven holidays presents
+              </h2>
+              <h4 className="font-tabs font-semibold">
+                <span className="border-b-2 text-2xl leading-8 text-clip border-gray-400">
+                  Vagamon - Kuttikkanam
+                </span>
+              </h4>
+              <p className="text-xs font-body mt-4 mb-2">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Laudantium eos nostrum mollitia error dolorem ut at, odit ipsum
+                minima dignissimos voluptate excepturi nobis aut nam iste
+                delectus, sapiente, quod facilis!
+              </p>
+              <p className="font-body text-sm font-medium text-gray-600 mb-1">
+                2 days 1 night
+              </p>
+              <p className="flex gap-2 items-center font-body text-sm font-bold mb-4">
+                <span>
+                  <BsFillPeopleFill />
+                </span>
+                2
+              </p>
+              <button className="px-5 py-2 font-body rounded-md bg-primary mb-4 text-white">
+                see more
+              </button>
+            </div>
+            <div className="rounded-r-md w-64 relative overflow-hidden bg-bg-1/70 shadow-lg px-6 ring-1 ring-black/60">
+              <img
+                src="src/assets/ayurveda-kerala-tourism.jpg"
+                alt=""
+                className="absolute top-0 right-0 bottom-0 left-0"
+              />
+            </div>
+          </div>
+          <div className="md:hidden bg-cover bg-[url('src/assets/hill-stations-kerala-tourism.jpg')] bg-no-repeat overflow-hidden w-full">
+            <div className=" p-4 mx-4 mb-4 bg-white/20 hover:bg-white/60 mt-16  shadow-md">
+              <h2 className="font-title mt-4 mb-3 text-lg font-bold text-green-700">
+                heaven holidays presents
+              </h2>
+              <h4 className="font-tabs font-semibold">
+                <span className="border-b-2 text-2xl leading-8 text-clip border-gray-400 ">
+                  Vagamon - Kuttikkanam
+                </span>
+              </h4>
+              <p className="text-xs font-body mt-4 mb-2">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Laudantium eos nostrum mollitia error dolorem ut at, odit ipsum
+                minima dignissimos voluptate excepturi nobis aut nam iste
+                delectus, sapiente, quod facilis!
+              </p>
+              <p className="font-body font-bold text-sm">2 days 1 night</p>
+              <p className="flex gap-2 items-center font-body text-sm font-bold mb-4">
+                <span>
+                  <BsFillPeopleFill />
+                </span>
+                2
+              </p>
+              <button className="px-5 py-2 font-body rounded-md bg-primary mb-4 text-white">
+                see more
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div className="text-black/70 bg-bg-1/40">
+          <Footer />
+        </div>
       </div>
     </>
   );

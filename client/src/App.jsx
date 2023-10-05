@@ -31,6 +31,7 @@ import ProviderPrivateRoutes from "./components/Provider/PrivateRoutes";
 import AdminPrivateRoutes from "./components/admin/PrivateRoutes";
 import PersonalInfo from "./components/Provider/PersonalInfo";
 import BussinessInfo from "./components/Provider/BussinessInfo";
+import Packages from "./pages/Packages";
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
       {/* User Routes */}
       <Route path="/">
         <Route index element={<HomePage />} />
+        <Route path="packages" element={<Packages />} />
 
         <Route element={<UserAuthenticated />}>
           <Route path="auth" element={<UserLogin />} />

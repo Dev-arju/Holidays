@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { NavLink, Link, useNavigate } from "react-router-dom";
+import { NavLink, Link, useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { AiOutlineClose } from "react-icons/ai";
 import { Tooltip } from "react-tooltip";
@@ -15,8 +15,9 @@ const TOOLTIP_STYLE = {
   backgroundColor: "#616161",
 };
 
-const Navbar = () => {
+const Navbar = ({ scrollToFeaturedSection }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { authData } = useSelector((state) => state.user);
@@ -62,8 +63,22 @@ const Navbar = () => {
           </Link>
           <div className="hidden lg:flex lg:col-span-5 items-center justify-center gap-5">
             <ul className="flex gap-6 text-sm font-tabs cursor-pointer">
-              <li className="hover:scale-110">New & Featured</li>
-              <li className="hover:scale-110">Packages</li>
+              {location.pathname === "/" ? (
+                <button
+                  onClick={() => scrollToFeaturedSection()}
+                  className="hover:scale-110"
+                >
+                  New & Featured
+                </button>
+              ) : (
+                <Link to="/#featuredSection" className="hover:scale-110">
+                  New & Featured
+                </Link>
+              )}
+
+              <NavLink to="/packages" className="hover:scale-110">
+                Packages
+              </NavLink>
               <li className="hover:scale-110">Rooms & Resorts</li>
               <li className="hover:scale-110">Contact Us</li>
             </ul>
@@ -193,19 +208,28 @@ const Navbar = () => {
                 <ul className="mb-6 flex flex-col gap-1.5">
                   {/* <!-- Menu Item Dashboard --> */}
                   <li>
-                    <NavLink
-                      to="#"
-                      className="group relative flex items-center gap-2.5 py-2 px-4 font-medium duration-300 ease-in-out"
-                    >
-                      New & Featured
-                    </NavLink>
+                    {location.pathname === "/" ? (
+                      <button
+                        onClick={() => scrollToFeaturedSection()}
+                        className="group relative flex items-center gap-2.5 py-2 px-4 font-medium duration-300 ease-in-out"
+                      >
+                        New & Featured
+                      </button>
+                    ) : (
+                      <NavLink
+                        to="/#featuredSection"
+                        className="group relative flex items-center gap-2.5 py-2 px-4 font-medium duration-300 ease-in-out"
+                      >
+                        New & Featured
+                      </NavLink>
+                    )}
                   </li>
                   {/* <!-- Menu Item Dashboard --> */}
 
                   {/* <!-- Menu Item Packages --> */}
                   <li>
                     <NavLink
-                      to="#"
+                      to="packages"
                       className="group relative flex items-center gap-2.5 py-2 px-4 font-medium duration-300 ease-in-out"
                     >
                       Packages
