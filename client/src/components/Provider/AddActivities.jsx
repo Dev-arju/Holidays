@@ -64,47 +64,53 @@ const AddActivities = ({
           <p className="font-body text-sm font-bold">Activities</p>
         </div>
         {fields.map((field, index) => {
-          return index < 4 ? (
-            <div
-              key={field.id}
-              className="relative col-span-1 pb-1.5 bg-sky-50 overflow-hidden rounded-md shadow-md text-gray-400 font-body"
-            >
+          return (
+            index < 4 && (
               <div
-                className="relative w-full cursor-pointer"
-                onClick={
-                  index === fields.length - 1 ? () => addActivity(index) : null
+                key={field.id}
+                className={
+                  index !== fields.length - 1
+                    ? "relative col-span-1 pb-1.5 bg-sky-50 overflow-hidden rounded-md shadow-md text-black font-body"
+                    : "relative col-span-1 pb-1.5 bg-sky-50 overflow-hidden rounded-md shadow-md text-gray-400 font-body"
                 }
               >
-                <div className="absolute top-2/3 w-full text-center text-sm font-bold font-body text-black z-30">
-                  {index < fields.length - 1 ? "" : "Add Activity"}
+                <div
+                  className="relative w-full cursor-pointer"
+                  onClick={
+                    index === fields.length - 1
+                      ? () => addActivity(index)
+                      : null
+                  }
+                >
+                  <div className="absolute top-2/3 w-full text-center text-sm font-bold font-body text-black z-30">
+                    {index < fields.length - 1 ? "" : "Add Activity"}
+                  </div>
+                  <img
+                    src={
+                      index < fields.length - 1
+                        ? imgUrls[index]
+                        : "/src/assets/addImage.png"
+                    }
+                    alt="activity image"
+                    className={
+                      index < fields.length - 1
+                        ? "w-full aspect-square"
+                        : "w-full object-scale-down"
+                    }
+                  />
                 </div>
-                <img
-                  src={
-                    index < fields.length - 1
-                      ? imgUrls[index]
-                      : "/src/assets/addImage.png"
-                  }
-                  alt="activity image"
-                  className={
-                    index < fields.length - 1
-                      ? "w-full aspect-square"
-                      : "w-full object-scale-down"
-                  }
-                />
-              </div>
 
-              <h6 className="px-2 font-semibold text-xs py-1">
-                {field.type || "Accomodation Type"}
-              </h6>
-              <h2 className="px-2 text-sm font-bold pb-1">
-                {field.location || "Location"}
-              </h2>
-              <p className="px-2 text-[10px]">
-                {field.description || "description or specialities"}
-              </p>
-            </div>
-          ) : (
-            ""
+                <h6 className="px-2 font-semibold text-xs py-1">
+                  {field.type || "Accomodation Type"}
+                </h6>
+                <h2 className="px-2 text-sm font-bold pb-1">
+                  {field.location || "Location"}
+                </h2>
+                <p className="px-2 text-[10px]">
+                  {field.description || "description or specialities"}
+                </p>
+              </div>
+            )
           );
         })}
 

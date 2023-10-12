@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { NavLink, Link, useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { AiOutlineClose } from "react-icons/ai";
+import { BiLogOutCircle } from "react-icons/bi";
 import { Tooltip } from "react-tooltip";
 import { dropCredential } from "../redux/slices/userSlice";
 import LogoIcon from "./LogoIcon";
@@ -17,6 +18,7 @@ const TOOLTIP_STYLE = {
 
 const Navbar = ({ scrollToFeaturedSection }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [dropdown, setDropdown] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -48,11 +50,9 @@ const Navbar = ({ scrollToFeaturedSection }) => {
     setSidebarOpen(!sidebarOpen);
   };
 
-  const handleLogout = () => {
-    dispatch(dropCredential());
+  const handleAvatarError = (e) => {
+    console.log(e.target);
   };
-
-  console.log(sidebarOpen);
 
   return (
     <>
@@ -79,7 +79,9 @@ const Navbar = ({ scrollToFeaturedSection }) => {
               <NavLink to="/packages" className="hover:scale-110">
                 Packages
               </NavLink>
-              <li className="hover:scale-110">Rooms & Resorts</li>
+              <NavLink to="/properties" className="hover:scale-110">
+                Rooms & Resorts
+              </NavLink>
               <li className="hover:scale-110">Contact Us</li>
             </ul>
           </div>
@@ -129,39 +131,59 @@ const Navbar = ({ scrollToFeaturedSection }) => {
                 </Link>
                 <Tooltip style={TOOLTIP_STYLE} id="bookings" place="bottom" />
 
-                <button
-                  className="ml-2 p-[0.10rem] overflow-hidden w-10 h-10 rounded-full bg-neutral-200 shadow-md hover:drop-shadow-lg cursor-pointer"
-                  onClick={handleLogout}
-                >
-                  {authData?.avatar !== "" ? (
-                    <img
-                      src={authData.avatar}
-                      alt=""
-                      className="object-cover rounded-full z-50"
-                    />
-                  ) : (
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      className="object-cover"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"
+                <div className="ml-2 p-[0.10rem] relative w-10 h-10 rounded-full bg-neutral-200 shadow-md hover:drop-shadow-lg cursor-pointer">
+                  <button
+                    onClick={() => setDropdown((prev) => !prev)}
+                    className="focus:outline-none overflow-hidden"
+                  >
+                    {authData?.avatar !== "" ? (
+                      <img
+                        src={authData.avatar}
+                        alt="icon"
+                        onError={handleAvatarError}
+                        className="object-cover rounded-full z-50"
                       />
-                    </svg>
+                    ) : (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1"
+                        stroke="currentColor"
+                        className="object-cover z-50"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"
+                        />
+                      </svg>
+                    )}
+                  </button>
+                  {dropdown && (
+                    <div className="absolute top-12 right-6 w-48 z-50 p-6 bg-neutral-100 cursor-default shadow-xl rounded-xl">
+                      <ul className="flex flex-col justify-center items-center gap-2 mb-2">
+                        <li className="font-body text-sm text-black">
+                          profile
+                        </li>
+                        <li className=" mt-1 text-red-600 font-body text-lg">
+                          <button
+                            onClick={() => dispatch(dropCredential())}
+                            className="focus:outline-none rounded-full px-4 py-0.5 hover:ring-1 ring-red-600"
+                          >
+                            logout
+                          </button>
+                        </li>
+                      </ul>
+                    </div>
                   )}
-                </button>
+                </div>
               </div>
             ) : (
               <div className="hidden lg:block">
                 <NavLink
                   to="/auth"
-                  className="rounded-2xl hover:shadow-gray-500/100  py-2 px-4 cursor-pointer  font-bold bg-secondary shadow-md shadow-gray-500/50 font-body text-sm text-primary"
+                  className="rounded-2x shadow-md  py-2 px-4 cursor-pointer  font-bold bg-secondary  font-body text-sm text-primary"
                 >
                   Account
                 </NavLink>
@@ -196,11 +218,11 @@ const Navbar = ({ scrollToFeaturedSection }) => {
       {sidebarOpen && (
         <aside
           ref={sidebar}
-          className={`absolute left-0 top-14 z-50 flex h-screen w-56 flex-col overflow-y-hidden bg-neutral-100 text-black/75  duration-300 ease-linear lg:hidden ${
+          className={`absolute left-0 top-14 bottom-0 z-50 flex w-56 flex-col overflow-y-hidden bg-neutral-100 text-black/75  duration-300 ease-linear lg:hidden ${
             sidebarOpen ? "translate-x-0" : "-translate-x-full"
           }`}
         >
-          <div className="flex flex-col overflow-y-auto duration-300 ease-linear invisible-scrollbar">
+          <div className="flex flex-col overflow-y-auto duration-300 ease-linear">
             {/* <!-- Sidebar Menu --> */}
             <nav className="mt-5 py-4 px-4 lg:m-0  lg:px-6 font-tabs">
               {/* <!-- Menu Group --> */}
@@ -229,7 +251,7 @@ const Navbar = ({ scrollToFeaturedSection }) => {
                   {/* <!-- Menu Item Packages --> */}
                   <li>
                     <NavLink
-                      to="packages"
+                      to="/packages"
                       className="group relative flex items-center gap-2.5 py-2 px-4 font-medium duration-300 ease-in-out"
                     >
                       Packages
@@ -240,7 +262,7 @@ const Navbar = ({ scrollToFeaturedSection }) => {
                   {/* <!-- Menu Item Properties --> */}
                   <li>
                     <NavLink
-                      to="#"
+                      to="/properties"
                       className="group relative flex items-center gap-2.5 py-2 px-4 font-medium duration-300 ease-in-out"
                     >
                       Rooms & Resorts
@@ -259,16 +281,34 @@ const Navbar = ({ scrollToFeaturedSection }) => {
                   </li>
                   {/* <!-- Menu Item Reservations --> */}
 
-                  {/* <!-- Menu Item Bookings --> */}
-                  <li>
-                    <NavLink
-                      to="/auth"
-                      className="group relative flex items-center gap-2.5 py-2 px-4 font-medium duration-300 ease-in-out"
-                    >
-                      Account
-                    </NavLink>
-                  </li>
-                  {/* <!-- Menu Item Bookings --> */}
+                  {Object.keys(authData).length > 0 ? (
+                    <>
+                      <li>
+                        <NavLink
+                          to="#"
+                          className="group relative flex items-center gap-2.5 py-2 px-4 font-medium duration-300 ease-in-out"
+                        >
+                          Profile
+                        </NavLink>
+                      </li>
+                      <li
+                        onClick={() => dispatch(dropCredential())}
+                        className="py-2 ring-1 ring-red-600 text-red-600 rounded-full flex justify-center items-center gap-2 "
+                      >
+                        <BiLogOutCircle />
+                        <button className="focus:outline-none">logout</button>
+                      </li>
+                    </>
+                  ) : (
+                    <li>
+                      <NavLink
+                        to="/auth"
+                        className="group relative flex items-center gap-2.5 py-2 px-4 font-medium duration-300 ease-in-out"
+                      >
+                        Account
+                      </NavLink>
+                    </li>
+                  )}
                 </ul>
               </div>
             </nav>

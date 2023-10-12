@@ -14,7 +14,6 @@ const GoogleBtn = () => {
   const googleLogin = useGoogleLogin({
     flow: "auth-code",
     onSuccess: async (codeResponse) => {
-      console.log(codeResponse);
       const response = await postRequest("/users/auth/google", {
         code: codeResponse.code,
       });

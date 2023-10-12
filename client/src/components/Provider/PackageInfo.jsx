@@ -8,13 +8,13 @@ const PackageInfo = ({
 }) => {
   const form = useForm({
     defaultValues: {
-      packageName: "Vagamon - Kuttikkanam",
-      dayCount: 2,
-      nightCount: 1,
-      summary: "Peace full place and loving nature",
-      phoneNumbers: ["7865234561", ""],
-      adults: 2,
-      children: 2,
+      packageName: "",
+      dayCount: 0,
+      nightCount: 0,
+      summary: "",
+      phoneNumbers: ["", ""],
+      adults: 0,
+      children: 0,
       coverImage: [],
     },
   });

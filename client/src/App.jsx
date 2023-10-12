@@ -4,6 +4,10 @@ import { Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import UserLogin from "./pages/UserLogin";
 import UserSignUp from "./pages/UserSignUp";
+import Packages from "./pages/Packages";
+import ResortsAndHotels from "./pages/ResortsAndHotels";
+import BookPackages from "./pages/BookPackages";
+import Bookings from "./pages/Bookings";
 
 // provider
 import ProviderAuth from "./pages/Provider/ProviderAuth";
@@ -31,7 +35,7 @@ import ProviderPrivateRoutes from "./components/Provider/PrivateRoutes";
 import AdminPrivateRoutes from "./components/admin/PrivateRoutes";
 import PersonalInfo from "./components/Provider/PersonalInfo";
 import BussinessInfo from "./components/Provider/BussinessInfo";
-import Packages from "./pages/Packages";
+import PrivateRoutes from "./components/PrivateRoutes";
 
 function App() {
   return (
@@ -40,6 +44,12 @@ function App() {
       <Route path="/">
         <Route index element={<HomePage />} />
         <Route path="packages" element={<Packages />} />
+        <Route path="properties" element={<ResortsAndHotels />} />
+
+        <Route element={<PrivateRoutes />}>
+          <Route path="packages/book/:packageId" element={<BookPackages />} />
+          <Route path="bookings" element={<Bookings />} />
+        </Route>
 
         <Route element={<UserAuthenticated />}>
           <Route path="auth" element={<UserLogin />} />

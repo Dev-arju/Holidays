@@ -109,3 +109,59 @@ export const getAllPackages = asyncHandler(async (req, res) => {
     throw error;
   }
 });
+
+// @desc Send packages
+// route GET /api/users/packages
+// @access Public
+export const getPackages = asyncHandler(async (req, res) => {
+  const { search } = req.query;
+  let packages;
+  console.log(search);
+  try {
+    if (search === "") {
+      packages = await Package.find({}).populate("provider", "brandName");
+    } else {
+      packages = await Package.find({ packageName: search });
+    }
+    if (packages.length < 1) {
+      throw new Error("packages not found");
+    }
+    return res.status(200).json(packages);
+  } catch (error) {
+    return res.status(400).json({ message: error?.message });
+  }
+});
+
+// @desc Send Single Package Details
+// route GET /api/users/booking/:packageId
+// @access Private
+export const getSinglePackageDetails = asyncHandler(async (req, res) => {
+  const { packageId } = req.params;
+  try {
+    const selected = await Package.findById(packageId).populate(
+      "provider",
+      "brandName"
+    );
+    if (!selected) throw new Error("data is empty");
+
+    return res.status(200).json(selected);
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json(error);
+  }
+});
+
+// @desc retrive package info
+export function getPackage(id) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const item = await Package.findById(id).populate("provider", "brandName");
+      if (!item) {
+        reject("package not found");
+      }
+      resolve(item);
+    } catch (error) {
+      reject(error);
+    }
+  });
+}

@@ -88,7 +88,7 @@ const UserLogin = () => {
                   <input
                     type="text"
                     placeholder="email"
-                    className="focus:outline-none p-0 text-sm font-body font-semibold"
+                    className="focus:outline-none p-0 text-sm font-body font-semibold w-full"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     onFocus={handleInpFocus}
@@ -115,7 +115,7 @@ const UserLogin = () => {
                     type="password"
                     placeholder="password"
                     value={password}
-                    className="focus:outline-none p-0 text-sm font-body font-semibold"
+                    className="focus:outline-none p-0 text-sm font-body font-semibold w-full"
                     onChange={(e) => setPassword(e.target.value)}
                     onFocus={handleInpFocus}
                     onBlur={handleInpBlur}

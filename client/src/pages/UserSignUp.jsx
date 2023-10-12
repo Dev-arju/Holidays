@@ -95,16 +95,6 @@ const UserSignUp = () => {
         dispatch(setError(response.error.message));
         toast.error(response.error.message);
       }
-      // userInstance
-      //   .post("/users", { name, email, password, dob, promo })
-      //   .then((res) => {
-      //     dispatch(setCredentials(res.data));
-      //     navigate("/", { replace: true });
-      //   })
-      //   .catch((err) => {
-      //     dispatch(setError(err.response.data.message || err.message));
-      //     toast.error(err.response.data.message || err.message);
-      //   });
     }
   };
   const handleInpFocus = (e) => {

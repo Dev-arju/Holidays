@@ -1,5 +1,6 @@
 import asyncHandler from "express-async-handler";
 import { verifyToken } from "../utils/generateToken.js";
+import { getUser } from "../controllers/userController.js";
 
 export const protect = asyncHandler(async (req, res, next) => {
   if (!req.headers.authorization) {
@@ -11,8 +12,17 @@ export const protect = asyncHandler(async (req, res, next) => {
     const token = authorisation.split(" ")[1];
     const decode = verifyToken(token);
     if (decode && decode.role === process.env.USER_CONST) {
-      req.userId = decode.id;
-      return next();
+      getUser(decode.id)
+        .then((user) => {
+          if (user && user.isActive) {
+            req.userId = decode.id;
+            return next();
+          }
+          res.status(403).json({ message: "user has been blocked" });
+        })
+        .catch((err) => {
+          res.status(404).json({ message: err?.message || err });
+        });
     }
   }
   res.status(401);

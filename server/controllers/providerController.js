@@ -1,7 +1,7 @@
 import asyncHandler from "express-async-handler";
 import Provider from "../models/providerModel.js";
 import jwt from "jsonwebtoken";
-import mailer from "../utils/nodeMailer.js";
+import sendMail from "../utils/nodeMailer.js";
 import { generateToken } from "../utils/generateToken.js";
 
 // @desc Update Password
@@ -71,9 +71,8 @@ export const sendResetLink = asyncHandler(async (req, res) => {
       };
       const token = jwt.sign(payload, secret, { expiresIn: "10m" });
       const url = `http://localhost:3000/provider/reset/${provider._id}?token=${token}`;
-      const result = await mailer(provider.email, url);
-      console.log(result); // refresh token expries
-      if (result.status === 400) throw new Error("email not sent server error");
+      const result = await sendMail(provider.email, url);
+      if (!result) throw new Error("Error send url");
       return res.status(200).send("password rest link send to your email");
     }
     throw new Error(`${email} is not registered with us`);

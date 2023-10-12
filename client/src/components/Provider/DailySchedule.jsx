@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import GeneralOptions from "../../components/Provider/GeneralOptions";
 import AddActivities from "./AddActivities";
 import { useForm } from "react-hook-form";
@@ -14,22 +14,29 @@ const DailySchedule = ({
 }) => {
   // const currKey = `Day${day}`;
   const [activeComponent, setActiveComponent] = useState("general");
+  const [lastDay, setLastDay] = useState(false);
   const generalForm = useForm({
     defaultValues: {
       foodOptions: [{ type: "", food: "", foodImage: [] }],
       travelling: {
-        vehicleType: "suv",
-        modelName: "innova",
-        seats: 7,
+        vehicleType: "",
+        modelName: "",
+        seats: 0,
       },
       accomodation: {
-        type: "resort",
-        name: "hill on misty",
-        location: "vagamon",
+        type: "",
+        name: "",
+        location: "",
         image: [],
       },
     },
   });
+
+  useEffect(() => {
+    if (day === totalDays) {
+      setLastDay(true);
+    }
+  }, [day]);
 
   const activityForm = useForm({
     defaultValues: {
@@ -92,6 +99,7 @@ const DailySchedule = ({
       return (
         <GeneralOptions
           form={generalForm}
+          lastDay={lastDay}
           setActiveComponent={setActiveComponent}
         />
       );

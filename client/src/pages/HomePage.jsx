@@ -35,7 +35,7 @@ const HomePage = () => {
   };
 
   return (
-    <>
+    <div className="">
       <Navbar scrollToFeaturedSection={scrollToFeaturedSection} />
       <div className="w-full bg-bg-1/40 grid md:grid-cols-2 justify-center gap-4 items-center py-8">
         <div className="flex justify-center md:justify-end">
@@ -80,8 +80,8 @@ const HomePage = () => {
               glamorous traditions, aromatic ayurvedic spas and an unforgettable
               culinary experience..
             </p>
-            <button className="font-tabs font-bold px-4 py-1 rounded-sm bg-black text-secondary mt-3 hover:scale-110 hover:shadow-lg shadow-md">
-              try it
+            <button className="font-tabs font-bold px-4 pt-1 pb-1.5 rounded-sm bg-black text-secondary mt-3 hover:scale-110 hover:shadow-lg shadow-md">
+              explore
             </button>
           </div>
         </div>
@@ -108,9 +108,9 @@ const HomePage = () => {
         </div>
 
         <div className="flex flex-wrap justify-between items-end gap-4 mx-8 md:mx-16 p-6 mt-36 md:mt-56 bg-black/40 rounded-xl ring-2 ring-white/40 hover:bg-black/80">
-          <div className="flex-grow flex-shrink font-body text-white max-w-2xl">
+          <div className="flex-grow flex-shrink font-body w-full text-white max-w-2xl">
             <p className="text-3xl font-bold mb-2">Vagmon - Kuttikkanam</p>
-            <p className="mb-2 text-clip text-xs">
+            <p className="mb-2 text-xs">
               Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quo
               inventore ullam at blanditiis cupiditate sequi tempore ut eos
               natus. Architecto fugiat voluptate maxime illo optio saepe beatae,
@@ -136,7 +136,7 @@ const HomePage = () => {
         ref={featuredSection}
       >
         <div className="flex justify-center items-center ">
-          <h2 className="font-title font-extrabold text-lg px-24 py-2 shadow-inner bg-white/60 ring ring-bg-1">
+          <h2 className="font-title font-extrabold text-lg px-24 py-2 shadow-inner bg-white/60 border-b border-gray-400">
             New & Featured
           </h2>
         </div>
@@ -179,7 +179,7 @@ const HomePage = () => {
               />
             </div>
           </div>
-          <div className="md:hidden bg-cover bg-[url('src/assets/hill-stations-kerala-tourism.jpg')] bg-no-repeat overflow-hidden w-full">
+          <div className="md:hidden bg-cover bg-[url('src/assets/hill-stations-kerala-tourism.jpg')] bg-no-repeat z-20 overflow-hidden w-full">
             <div className=" p-4 mx-4 mb-4 bg-white/20 hover:bg-white/60 mt-16  shadow-md">
               <h2 className="font-title mt-4 mb-3 text-lg font-bold text-green-700">
                 heaven holidays presents
@@ -276,11 +276,11 @@ const HomePage = () => {
           </div>
         </div>
 
-        <div className="text-black/70 bg-bg-1/40">
+        <div className="text-black bg-bg-1/40">
           <Footer />
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

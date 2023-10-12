@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import FoodOptions from "./FoodOptions";
 import Stay from "./Stay";
 
-const GeneralOptions = ({ setActiveComponent, form }) => {
+const GeneralOptions = ({ setActiveComponent, form, lastDay }) => {
   const [toogleFood, setToogleFood] = useState(true);
   const [toggleTravelOption, setToggleTravelOption] = useState(false);
   const [stayToogle, setStayToggle] = useState(false);
@@ -94,16 +94,18 @@ const GeneralOptions = ({ setActiveComponent, form }) => {
         >
           Food Menu
         </div>
-        <div
-          onClick={stayToogleChange}
-          className={
-            stayToogle
-              ? "text-white px-5 py-2.5 bg-gray-800 transition ease-in duration-500 rounded-tr-lg cursor-pointer"
-              : "text-blue-600 px-5 py-2.5 shadow-md border-r-2 border-gray-400 transition ease-out duration-500 cursor-pointer"
-          }
-        >
-          Accomodation
-        </div>
+        {!lastDay && (
+          <div
+            onClick={stayToogleChange}
+            className={
+              stayToogle
+                ? "text-white px-5 py-2.5 bg-gray-800 transition ease-in duration-500 rounded-tr-lg cursor-pointer"
+                : "text-blue-600 px-5 py-2.5 shadow-md border-r-2 border-gray-400 transition ease-out duration-500 cursor-pointer"
+            }
+          >
+            Accomodation
+          </div>
+        )}
         <div
           onClick={travelToggle}
           className={
@@ -124,7 +126,7 @@ const GeneralOptions = ({ setActiveComponent, form }) => {
         </div>
       </div>
       <FoodOptions form={form} toggle={toogleFood} />
-      <Stay form={form} toggle={stayToogle} />
+      {!lastDay && <Stay form={form} toggle={stayToogle} />}
       <TravelOption form={form} toggle={toggleTravelOption} />
     </>
   );

@@ -97,7 +97,7 @@ export const googleSign = asyncHandler(async (req, res) => {
       url: "https://www.googleapis.com/oauth2/v2/userinfo",
       method: "GET",
     });
-    console.log(user);
+
     if (user.data.email && user.data.name) {
       const existUser = await User.findOne({ email: user.data.email }).select(
         "-password"
@@ -148,3 +148,18 @@ export const googleSign = asyncHandler(async (req, res) => {
     throw err;
   }
 });
+
+// @desc retrive user info
+export function getUser(userId) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const user = await User.findById(userId).select("-password");
+      if (!user) {
+        reject("user not found");
+      }
+      resolve(user);
+    } catch (error) {
+      reject(error);
+    }
+  });
+}

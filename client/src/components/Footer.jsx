@@ -6,7 +6,7 @@ import LogoIcon from "./LogoIcon";
 const Footer = () => {
   return (
     <>
-      <footer className="flex  flex-wrap-reverse justify-between  items-end font-body pb-2 pt-4 text-xs">
+      <footer className="flex justify-between  items-end font-body pb-2 pt-4 text-xs">
         <main className="flex items-center self-center ml-8">
           <div className="hidden md:flex">
             <PiCopyrightBold />
@@ -19,7 +19,7 @@ const Footer = () => {
             <li className="cursor-pointer">Get Help</li>
           </ul>
         </main>
-        <Link to="/" className=" ml-2 mr-8 mb-4 md:mb-0">
+        <Link to="/" className="hidden md:block ml-2 mr-8 mb-4 md:mb-0">
           <LogoIcon />
         </Link>
       </footer>
