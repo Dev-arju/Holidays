@@ -8,6 +8,8 @@ import Packages from "./pages/Packages";
 import ResortsAndHotels from "./pages/ResortsAndHotels";
 import BookPackages from "./pages/BookPackages";
 import Bookings from "./pages/Bookings";
+import PackgeDetails from "./pages/PackgeDetails";
+import SavedBooking from "./pages/SavedBooking";
 
 // provider
 import ProviderAuth from "./pages/Provider/ProviderAuth";
@@ -23,10 +25,14 @@ import EditProperty from "./pages/Provider/EditProperty";
 import AddProperty from "./pages/Provider/AddProperty";
 import PriceOption from "./pages/Provider/PriceOption";
 import EditPriceOption from "./pages/Provider/EditPriceOption";
+import ProviderBussiness from "./pages/Provider/Bookings";
 
 // admin
 import AdminDashboard from "./pages/Admin/Dashboard";
 import AdminAuth from "./pages/Admin/Auth";
+import ProviderList from "./pages/Admin/ProviderList";
+import UsersList from "./pages/Admin/UsersList";
+import AdminBookings from "./pages/Admin/Bookings";
 
 /** Components */
 import NotFound from "./components/NotFound";
@@ -44,11 +50,13 @@ function App() {
       <Route path="/">
         <Route index element={<HomePage />} />
         <Route path="packages" element={<Packages />} />
+        <Route path="packages/details/:packageId" element={<PackgeDetails />} />
         <Route path="properties" element={<ResortsAndHotels />} />
 
         <Route element={<PrivateRoutes />}>
           <Route path="packages/book/:packageId" element={<BookPackages />} />
           <Route path="bookings" element={<Bookings />} />
+          <Route path="saved" element={<SavedBooking />} />{" "}
         </Route>
 
         <Route element={<UserAuthenticated />}>
@@ -75,6 +83,7 @@ function App() {
             path="properties/edit/price-options/:docId"
             element={<EditPriceOption />}
           />
+          <Route path="bookings" element={<ProviderBussiness />} />
         </Route>
         <Route path="auth" element={<ProviderAuth />} />
         <Route path="reset" element={<ResetPassword />} />
@@ -89,6 +98,9 @@ function App() {
       <Route path="/admin">
         <Route element={<AdminPrivateRoutes />}>
           <Route index element={<AdminDashboard />} />
+          <Route path="providers" element={<ProviderList />} />
+          <Route path="users" element={<UsersList />} />
+          <Route path="bookings" element={<AdminBookings />} />
         </Route>
         <Route path="auth" element={<AdminAuth />} />
       </Route>

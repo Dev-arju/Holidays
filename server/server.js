@@ -27,7 +27,7 @@ app.use(cookieParser());
 
 app.use("/api/users", userRoutes);
 app.use("/api/provider", providerRoutes);
-// app.use("/api/admin", adminRoutes);
+app.use("/api/admin", adminRoutes);
 app.use(notFound);
 app.use(errorHandler);
 

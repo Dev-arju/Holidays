@@ -1,14 +1,23 @@
 import express from "express";
+import { registerAdmin, authenticate } from "../controllers/adminController.js";
 import {
-  registerAdmin,
-  authenticate,
-  clearToken,
-} from "../controllers/adminController.js";
+  getAllProviders,
+  toggleProviderStatus,
+} from "../controllers/providerController.js";
+import {
+  getAllUsers,
+  toggleUserStatus,
+} from "../controllers/userController.js";
+import { getAllBookings } from "../controllers/bookingController.js";
 import { adminProtect } from "../middleware/authMiddleware.js";
 const router = express.Router();
 
-// router.post("/", registerAdmin)
+// router.post("/", registerAdmin);
 router.post("/auth", authenticate);
-router.post("/logout", clearToken);
+router.get("/users", adminProtect, getAllUsers);
+router.get("/providers", adminProtect, getAllProviders);
+router.get("/bookings", adminProtect, getAllBookings);
+router.put("/users/status-toggle", adminProtect, toggleUserStatus);
+router.put("/providers/status-toggle", adminProtect, toggleProviderStatus);
 
 export default router;

@@ -1,6 +1,6 @@
 import Admin from "../models/adminModel.js";
 import asyncHandler from "express-async-handler";
-// import { generateMasterToken } from "../utils/generateToken.js";
+import { generateToken } from "../utils/generateToken.js";
 
 // @desc Register Credentials
 // route POST /api/admin
@@ -34,23 +34,14 @@ export const authenticate = asyncHandler(async (req, res) => {
   }
   const admin = await Admin.findOne({ authId });
   if (admin && (await admin.matchPassword(password))) {
-    // generateMasterToken(res, admin._id);
-    return res
-      .status(201)
-      .json({ _id: admin._id, authId: admin.authId, isAuth: true });
+    const payload = {
+      id: admin._id,
+      role: process.env.ADMIN_CONST,
+    };
+    const token = generateToken(payload);
+    return res.status(201).json({ _id: admin._id, token });
   } else {
     res.status(401);
     throw new Error("invalid credential");
   }
-});
-
-// @desc Destroy Token
-// route POST /api/admin/logout
-// @access Public
-export const clearToken = asyncHandler(async (req, res) => {
-  res.cookie("masterToken", "", {
-    httpOnly: true,
-    expires: new Date(0),
-  });
-  res.status(200).json({ message: "logout successful" });
 });

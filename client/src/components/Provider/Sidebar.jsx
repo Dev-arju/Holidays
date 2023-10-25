@@ -167,7 +167,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
               {/* <!-- Menu Item Reservations --> */}
               <li>
                 <NavLink
-                  to="/reservations"
+                  to="#"
                   className={`group relative flex items-center gap-2.5 py-2 px-4 font-medium duration-300 ease-in-out ${
                     pathname.includes("reservations") &&
                     "bg-white text-black rounded-full"
@@ -206,7 +206,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
               {/* <!-- Menu Item Bookings --> */}
               <li>
                 <NavLink
-                  to="/bookings"
+                  to="/provider/bookings"
                   className={`group relative flex items-center gap-2.5 py-2 px-4 font-medium  duration-300 ease-in-out ${
                     pathname.includes("bookings") &&
                     "bg-white text-black rounded-full"

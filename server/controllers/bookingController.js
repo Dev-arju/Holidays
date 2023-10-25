@@ -77,7 +77,7 @@ export const verificationHandler = asyncHandler(async (req, res) => {
 export const getUserBookings = asyncHandler(async (req, res) => {
   const { userId } = req;
   try {
-    const bookings = await Booking.find({ userId }).populate({
+    const bookings = await Booking.find({ userId, isPaid: true }).populate({
       path: "packageId",
       populate: {
         path: "provider",
@@ -91,5 +91,33 @@ export const getUserBookings = asyncHandler(async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(404).json({ message: error?.message });
+  }
+});
+
+// @desc Get all documents
+// route GET /api/admin/bookings
+// @access Private
+export const getAllBookings = asyncHandler(async (req, res) => {
+  try {
+    const bookings = await Booking.find().populate([
+      {
+        path: "userId",
+        select: "-password -_id",
+      },
+      {
+        path: "packageId",
+        select: "-_id",
+        populate: {
+          path: "provider",
+          select: "-_id -password",
+        },
+      },
+    ]);
+    if (!bookings) throw new Error("bookings not found");
+
+    return res.status(200).json(bookings);
+  } catch (error) {
+    res.status(400);
+    throw error;
   }
 });

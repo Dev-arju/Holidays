@@ -158,7 +158,7 @@ const BookPackages = () => {
   };
 
   return (
-    <div className="relative min-h-screen">
+    <div className="relative min-h-screen pt-12">
       <Navbar />
       <ToastContainer />
       <Modal

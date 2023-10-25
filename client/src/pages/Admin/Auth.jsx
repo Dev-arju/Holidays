@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { setIsAuth, setApiError } from "../../redux/slices/adminSlice";
+import { setCredential, setApiError } from "../../redux/slices/adminSlice";
 import { GiWorld } from "react-icons/gi";
 import { ToastContainer, toast } from "react-toastify";
-// import { adminInstance } from "../../utils/axios";
+import { postRequest } from "../../utils/axios";
 
 const authRegEx = /^\d{6}$/;
 const passwordRegEx =
@@ -15,29 +15,26 @@ const Auth = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
     if (!authRegEx.test(authId)) toast.error("enter six digit pin");
     if (!passwordRegEx.test(password))
       return toast.error("password does not match the crieteria");
     if (authRegEx.test(authId) && passwordRegEx.test(password)) {
-      // adminInstance
-      // .post(
-      //   "/admin/auth",
-      //   { authId, password },
-      //   {
-      //     withCredentials: true,
-      //   }
-      // )
-      // .then((res) => {
-      //   if (res.status !== 201) throw new Error(res.data);
-      //   dispatch(setIsAuth(res.data));
-      //   navigate("/admin", { replace: true });
-      // })
-      // .catch((err) => {
-      //   dispatch(setApiError(err.response.data.message || err.message));
-      //   toast.error(err.response.data.message || err.message);
-      // });
+      const { data, error, message } = await postRequest("/admin/auth", {
+        authId,
+        password,
+      });
+      if (data) {
+        console.log(data);
+        dispatch(setCredential(data));
+        navigate("/admin");
+      }
+      if (error) {
+        console.log(error);
+        dispatch(setApiError(error.message || message));
+        toast.error(error.message || message);
+      }
     }
   };
   return (

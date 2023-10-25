@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-// import { adminInstance } from "../../utils/axios";
-import { dropIsAuth } from "../../redux/slices/adminSlice";
+import { dropCredential } from "../../redux/slices/adminSlice";
 
 import UserOne from "../../assets/user/user-01.png";
 
@@ -31,18 +30,8 @@ const DropdownBtn = () => {
 
   const handleLogout = (e) => {
     e.stopPropagation();
-    // adminInstance
-    //   .post("/admin/logout", undefined, {
-    //     withCredentials: true,
-    //   })
-    //   .then((res) => {
-    //     if (res.status !== 200) throw new Error(res.data);
-    //     dispatch(dropIsAuth());
-    //     navigate("/admin/auth");
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
+    dispatch(dropCredential());
+    navigate("/admin/auth");
   };
 
   return (

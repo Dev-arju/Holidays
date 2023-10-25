@@ -35,7 +35,7 @@ const HomePage = () => {
   };
 
   return (
-    <div className="">
+    <div className="pt-12">
       <Navbar scrollToFeaturedSection={scrollToFeaturedSection} />
       <div className="w-full bg-bg-1/40 grid md:grid-cols-2 justify-center gap-4 items-center py-8">
         <div className="flex justify-center md:justify-end">

@@ -1,14 +1,15 @@
-import React, { useState, useEffect, useMemo, useRef } from "react";
-import { useSelector } from "react-redux";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { Tooltip } from "react-tooltip";
-import { BsHouseAddFill } from "react-icons/bs";
+import { useSelector } from "react-redux";
 import { MdPublishedWithChanges } from "react-icons/md";
-import { FaEdit } from "react-icons/fa";
-import { BsFillCaretLeftFill, BsFillCaretRightFill } from "react-icons/bs";
-import { putRequest, getRequest, setAccessToken } from "../../utils/axios";
+import { Tooltip } from "react-tooltip";
+import { setAccessToken, getRequest, putRequest } from "../../utils/axios";
 import { toast } from "react-toastify";
+import { BsFillCaretLeftFill, BsFillCaretRightFill } from "react-icons/bs";
+import { FcAcceptDatabase } from "react-icons/fc";
+import { CiViewList } from "react-icons/ci";
 
+import providerAvatar from "../../assets/userAvatar.png";
 const TOOLTIP_STYLE = {
   paddingLeft: "8px",
   paddingRight: "8px",
@@ -20,32 +21,35 @@ const TOOLTIP_STYLE = {
   color: " rgb(30 64 175)",
 };
 
-const Properties = () => {
-  const { authData } = useSelector((state) => state.provider);
+const ProviderList = () => {
+  const { authData } = useSelector((state) => state.admin);
   const [modal, setModal] = useState({ active: false, payload: "" });
-  const [properties, setProperties] = useState([]);
+  const [providers, setProviders] = useState([]);
   const [currPage, setCurrPage] = useState(1);
   const pagination = useRef(null);
   const totalPages = useMemo(() => {
-    return Math.ceil(properties.length / 5);
-  }, [properties.length]);
+    return Math.ceil(providers.length / 5);
+  }, [providers.length]);
+
+  const fetchProviders = async () => {
+    setAccessToken(authData.token);
+    const response = await getRequest("/admin/providers");
+    if (response.data) {
+      setProviders(response.data);
+    }
+    if (response.error) {
+      document.getElementById("isEmpty").classList.replace("hidden", "flex");
+      toast.error(response.error.message);
+      console.log(response.error.message || response.message);
+    }
+  };
 
   useEffect(() => {
-    const getAllProperties = async () => {
-      setAccessToken(authData.token);
-      const response = await getRequest("/provider/property");
-      if (response.data) {
-        setProperties(response.data);
-      }
-      if (response.error) {
-        document.getElementById("isEmpty").classList.replace("hidden", "flex");
-        console.log(response.error.message || response.message);
-      }
-    };
-    getAllProperties();
+    fetchProviders();
   }, []);
 
   useEffect(() => {
+    if (pagination.current) pagination.current.innerHTML = "";
     for (let i = 1; i <= totalPages; i++) {
       let child = document.createElement("p");
       child.onclick = pageClick;
@@ -72,105 +76,125 @@ const Properties = () => {
 
   const statusChange = async (e) => {
     e.stopPropagation();
-    const response = await putRequest(`/provider/property/${modal.payload}`);
-    if (response.data) {
-      setProperties((prev) => {
-        return prev.map((property) => {
-          if (property._id === modal.payload) {
-            return { ...property, isAvailable: !property.isAvailable };
+    console.log(modal);
+    const { data, error } = await putRequest("/admin/providers/status-toggle", {
+      providerId: modal.payload,
+    });
+    if (data) {
+      setProviders((prev) => {
+        return prev.map((doc) => {
+          if (doc._id === data._id) {
+            return data;
           }
-          return property;
+          return doc;
         });
       });
-      toast.success("property status changed");
     }
-    if (response.error) {
-      console.log(response.error);
-      toast.error(response.error.message || response.message);
+    if (error) {
+      console.log(error.message);
+      toast.error(error.message);
     }
-
-    setModal({ active: !modal.active, payload: "" });
+    setModal({ active: false, payload: "" });
   };
 
   return (
     <>
-      <div className="flex justify-between mx-4 px-4 py-2 items-center">
-        <div className="font-tabs text-2xl">Your Properties Listed</div>
+      <div className="flex justify-between mx-4 px-4 items-center">
+        <div className="font-body font-bold text-2xl">Providers</div>
         <Link
-          to="add"
-          data-tooltip-id="addProperty"
-          data-tooltip-content="List New Property"
-          className="p-2 rounded-full bg-primary text-secondary text-2xl"
+          to="#"
+          data-tooltip-id="a"
+          data-tooltip-content="Pending Requests"
+          className="p-2 rounded-full bg-neutral-200 shadow-lg text-2xl"
         >
-          <BsHouseAddFill />
+          <FcAcceptDatabase />
         </Link>
-        <Tooltip style={TOOLTIP_STYLE} id="addProperty" place="bottom-start" />
+        <Tooltip style={TOOLTIP_STYLE} id="a" place="bottom-start" />
       </div>
-      <div className="mt-2 pt-2 overflow-x-auto">
-        {properties.length > 0 ? (
+      <div className="mt-2 overflow-x-auto">
+        {providers.length > 0 ? (
           <table className="min-w-full table-auto text-center text-sm font-light">
             <thead className="border-b bg-neutral-50 shadow-inner font-medium">
               <tr>
-                <th scope="col" className="px-6 py-4">
-                  Property Name
+                <th scope="col" className="px-2 py-4">
+                  Avatar
                 </th>
                 <th scope="col" className="px-6 py-4">
-                  Location
+                  Name
                 </th>
                 <th scope="col" className="px-6 py-4">
-                  Booking Availability
+                  Email
                 </th>
                 <th scope="col" className="px-6 py-4">
-                  Price Plan Count
+                  Bussiness Name
                 </th>
-                <th scope="col" className="px-6 py-4"></th>
-                <th scope="col" className="px-6 py-4"></th>
+
+                <th scope="col" className="px-6 py-4">
+                  Bussiness Status
+                </th>
+                <th scope="col" className=" py-4"></th>
+                <th scope="col" className=" py-4"></th>
               </tr>
             </thead>
             <tbody>
-              {properties.map((property, index) => {
+              {providers.map((provider, index) => {
                 if ((currPage - 1) * 5 > index || currPage * 5 < index + 1) {
                   return;
                 }
                 return (
-                  <tr className="border-b" key={property._id}>
-                    <td className="whitespace-nowrap px-6 py-4 font-medium">
-                      {property.propertyName}
+                  <tr className="border-b" key={provider._id}>
+                    <td className="whitespace-nowrap px-2 py-4 font-medium">
+                      <img
+                        src={
+                          provider.brandLogo
+                            ? `http://localhost:8000/logo/${provider.brandLogo}`
+                            : providerAvatar
+                        }
+                        alt=""
+                        className="aspect-square w-10 mx-auto rounded-full bg-neutral-200"
+                      />
                     </td>
                     <td className="whitespace-nowrap font-normal px-6 py-4">
-                      {property.propertyLocation}
+                      {provider.name}
+                    </td>
+                    <td className="whitespace-nowrap font-normal px-6 py-4">
+                      {provider.email}
+                    </td>
+                    <td className="whitespace-nowrap font-normal px-6 py-4">
+                      {provider.brandName}
                     </td>
                     <td
                       className={
-                        property.isAvailable
+                        !provider.blocked
                           ? "whitespace-nowrap font-normal text-green-800 px-6 py-4"
                           : "whitespace-nowrap font-normal text-red-800 px-6 py-4"
                       }
                     >
-                      {property.isAvailable ? "available" : "unavailable"}
-                    </td>
-                    <td className="whitespace-nowrap font-normal px-6 py-4">
-                      {property.priceOptions.length}
+                      {!provider.blocked ? "available" : "unavailable"}
                     </td>
 
                     <td className="whitespace-nowrap px-6 py-4">
-                      <Link to={`edit/${property._id}`}>
-                        <FaEdit className="text-base cursor-pointer focus:outline-none view-form" />
+                      <Link to={"#"}>
+                        <CiViewList className="text-base cursor-pointer focus:outline-none view-form" />
                       </Link>
                       <Tooltip
                         style={TOOLTIP_STYLE}
                         place="bottom-end"
                         anchorSelect=".view-form"
-                        content="view/edit details"
+                        content="view details"
                       />
                     </td>
                     <td className="whitespace-nowrap px-6 py-4">
                       <MdPublishedWithChanges
-                        className="text-lg text-blue-800 cursor-pointer availability focus:outline-none"
+                        className={
+                          !provider.blocked
+                            ? "text-lg text-red-600 cursor-pointer availability focus:outline-none"
+                            : "text-lg text-green-400 cursor-pointer availability focus:outline-none"
+                        }
                         onClick={() =>
                           setModal({
                             active: !modal.active,
-                            payload: property._id,
+                            payload: provider._id,
                           })
                         }
                       />
@@ -178,7 +202,7 @@ const Properties = () => {
                         style={TOOLTIP_STYLE}
                         place="bottom-end"
                         anchorSelect=".availability"
-                        content="change property status"
+                        content="change provider status"
                       />
                     </td>
                   </tr>
@@ -192,23 +216,20 @@ const Properties = () => {
             className="hidden w-full h-96 flex-col justify-center items-center bg-neutral-100 rounded-md shadow-md"
           >
             <h2 className="font-serif font-semibold text-2xl text-center text-primary">
-              Properties Not Found
+              Providers Not Found
             </h2>
             <div className="flex justify-center items-center gap-4">
-              <span className="text-sm font-title">
-                if you wish to add new property
-              </span>
-              <Link
-                to="/provider/properties/add"
-                className="outline-none font-body text-primary "
+              <button
+                onClick={fetchProviders}
+                className="outline-none mt-2 font-tabs text-blue-600 hover:underline "
               >
-                Click here
-              </Link>
+                refresh
+              </button>
             </div>
           </div>
         )}
       </div>
-      {properties.length > 0 && (
+      {providers.length > 0 && (
         <div className="flex justify-end items-center mr-8 mt-8">
           <p className="w-6 text-center text-base font-bold ">
             <BsFillCaretLeftFill
@@ -228,9 +249,7 @@ const Properties = () => {
       {modal.active && (
         <div className="fixed top-0 left-0 lg:ml-28 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white px-8 py-4 rounded-md shadow-md">
-            <p className="h-12 font-title">
-              If you wish to change property status
-            </p>
+            <p className="h-12 font-title">Confirm to change provider status</p>
             <h1 className="text-center font-serif text-blue-900">
               Are you sure?
             </h1>
@@ -255,4 +274,4 @@ const Properties = () => {
   );
 };
 
-export default Properties;
+export default ProviderList;

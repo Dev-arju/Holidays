@@ -56,7 +56,7 @@ const Navbar = ({ scrollToFeaturedSection }) => {
 
   return (
     <>
-      <header className="static top-0 z-40 bg-neutral-100 w-full drop-shadow">
+      <header className="fixed top-0 z-40 bg-neutral-100 w-full drop-shadow">
         <nav className="flex justify-between items-center px-4 lg:grid lg:grid-cols-8 py-1">
           <Link to="/" className="lg:col-span-2 ml-2">
             <LogoIcon />

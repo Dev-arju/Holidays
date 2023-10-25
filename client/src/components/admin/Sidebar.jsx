@@ -166,9 +166,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
               {/* <!-- Menu Item Reservations --> */}
               <li>
                 <NavLink
-                  to="/reservations"
+                  to="/admin/bookings"
                   className={`group relative flex items-center gap-2.5 py-2 px-4 font-medium duration-300 ease-in-out ${
-                    pathname.includes("reservations") &&
+                    pathname.includes("bookings") &&
                     "bg-white text-black rounded-full"
                   }`}
                 >
@@ -197,7 +197,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                       </clipPath>
                     </defs>
                   </svg>
-                  Reservations
+                  Bookings
                 </NavLink>
               </li>
               {/* <!-- Menu Item Reservations --> */}
@@ -205,9 +205,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
               {/* <!-- Menu Item Bookings --> */}
               <li>
                 <NavLink
-                  to="/bookings"
+                  to="/admin/packages"
                   className={`group relative flex items-center gap-2.5 py-2 px-4 font-medium  duration-300 ease-in-out ${
-                    pathname.includes("bookings") &&
+                    pathname.includes("packages") &&
                     "bg-white text-black rounded-full"
                   }`}
                 >
@@ -240,7 +240,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                       </clipPath>
                     </defs>
                   </svg>
-                  Bookings
+                  Packages
                 </NavLink>
               </li>
               {/* <!-- Menu Item Bookings --> */}

@@ -206,3 +206,20 @@ export const updatePropertyDetails = asyncHandler(async (req, res) => {
   }
   res.status(200).json({ message: "basic details updated" });
 });
+
+// @desc Response data to user
+// route GET /api/users/properties
+// @access Public
+export const getProperties = asyncHandler(async (req, res) => {
+  try {
+    const properties = await Property.find({ isAvailable: true }).populate(
+      "providerId",
+      "brandName"
+    );
+    if (!properties) throw new Error("data not found");
+
+    return res.status(200).json(properties);
+  } catch (error) {
+    res.status(400).json(error);
+  }
+});

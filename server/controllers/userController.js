@@ -57,7 +57,11 @@ export const authTokenGenerate = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("user not found");
   }
-  if (user && user.isActive && (await user.matchPassword(password))) {
+  if (!user.isActive) {
+    res.status(403);
+    throw new Error("user has been blocked");
+  }
+  if (user && (await user.matchPassword(password))) {
     const payload = {
       id: user._id,
       role: process.env.USER_CONST,
@@ -163,3 +167,34 @@ export function getUser(userId) {
     }
   });
 }
+
+// @desc Get All Documents
+// @access Private
+export const getAllUsers = asyncHandler(async (req, res) => {
+  try {
+    const users = await User.find().select("-password");
+    if (!users) throw new Error("users not find");
+    return res.status(200).json(users);
+  } catch (error) {
+    console.log(error);
+    res.status(400);
+    throw error;
+  }
+});
+
+// @desc Change User Status
+// route PUT /api/admin/user/status-toggle
+// @access Private
+export const toggleUserStatus = asyncHandler(async (req, res) => {
+  const { userId } = req.body;
+  try {
+    const user = await User.findById(userId);
+    if (!user) throw new Error("user not found");
+    user.isActive = !user.isActive;
+    const saved = await user.save();
+    return res.status(200).json({ ...saved._doc, password: "" });
+  } catch (error) {
+    res.status(404);
+    throw error;
+  }
+});

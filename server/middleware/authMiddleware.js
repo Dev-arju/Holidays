@@ -12,17 +12,20 @@ export const protect = asyncHandler(async (req, res, next) => {
     const token = authorisation.split(" ")[1];
     const decode = verifyToken(token);
     if (decode && decode.role === process.env.USER_CONST) {
-      getUser(decode.id)
-        .then((user) => {
-          if (user && user.isActive) {
-            req.userId = decode.id;
-            return next();
-          }
+      try {
+        const user = await getUser(decode.id);
+        if (!user) {
+          res.status(403).json({ message: "user not found" });
+        }
+        if (user.isActive) {
+          req.userId = decode.id;
+          return next();
+        } else {
           res.status(403).json({ message: "user has been blocked" });
-        })
-        .catch((err) => {
-          res.status(404).json({ message: err?.message || err });
-        });
+        }
+      } catch (error) {
+        res.status(403).json({ message: error?.message || error });
+      }
     }
   }
   res.status(401);
@@ -35,9 +38,11 @@ export const adminProtect = asyncHandler(async (req, res, next) => {
     throw new Error("authorisation token is missing");
   }
   const authorization = req.headers.authorization;
+
   if (authorization && authorization.startsWith("Bearer ")) {
     const token = authorization.split(" ")[1];
     const decode = verifyToken(token);
+
     if (decode && decode.role === process.env.ADMIN_CONST) {
       req.adminId = decode.id;
       return next();

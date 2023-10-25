@@ -22,8 +22,9 @@ const GoogleBtn = () => {
         navigate("/", { replace: true });
       }
       if (response.error) {
+        console.log(response.error);
         dispatch(setError(response.error.message));
-        toast.error(response.message);
+        toast.error(response.error.message || response.message);
       }
     },
     onError: (errorResponse) => console.log(errorResponse),

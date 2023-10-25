@@ -23,7 +23,7 @@ const SearchComponent = ({ placeholder, setSearch }) => {
           onChange={(e) => setKeyword(e.target.value)}
           placeholder={placeholder}
           onKeyDown={handleEnterKeypress}
-          className="w-full py-2 px-1 text-2xl focus:outline-none bg-inherit"
+          className="w-full py-2 px-1 text-2xl focus:outline-none caret-bg-1 bg-inherit"
         />
         <label htmlFor="search" onClick={submitHandler}>
           <FaSearchLocation className="mx-auto text-2xl cursor-pointer hover:scale-125 transition-all duration-300" />

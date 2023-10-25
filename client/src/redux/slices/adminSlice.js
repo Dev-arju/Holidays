@@ -1,9 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  isAuth: localStorage.getItem("adminActive")
-    ? !!localStorage.getItem("adminActive")
-    : false,
+  authData: localStorage.getItem("admin")
+    ? JSON.parse(localStorage.getItem("admin"))
+    : {},
   apiError: "",
 };
 
@@ -11,25 +11,23 @@ const adminSlice = createSlice({
   name: "adminAuth",
   initialState,
   reducers: {
-    setIsAuth: (state, action) => {
-      state.isAuth = action.payload.isAuth;
+    setCredential: (state, action) => {
+      state.authData = action.payload;
       state.apiError = "";
-      localStorage.setItem(
-        "adminActive",
-        JSON.stringify(action.payload.isAuth)
-      );
+      localStorage.setItem("admin", JSON.stringify(action.payload));
     },
     setApiError: (state, action) => {
-      state.isAuth = false;
+      state.authData = {};
       state.apiError = action.payload;
     },
-    dropIsAuth: (state) => {
-      state.isAuth = false;
+    dropCredential: (state) => {
+      state.authData = {};
       state.apiError = "";
-      localStorage.removeItem("adminActive");
+      localStorage.removeItem("admin");
     },
   },
 });
 
-export const { setIsAuth, setApiError, dropIsAuth } = adminSlice.actions;
+export const { setCredential, setApiError, dropCredential } =
+  adminSlice.actions;
 export default adminSlice.reducer;

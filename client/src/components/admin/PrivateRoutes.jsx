@@ -3,12 +3,14 @@ import { Navigate, Outlet } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
+import BreadCrumb from "../Provider/BreadCrumb";
+import { ToastContainer } from "react-toastify";
 
 const PrivateRoutes = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { isAuth } = useSelector((state) => state.admin);
+  const { authData } = useSelector((state) => state.admin);
 
-  return isAuth ? (
+  return Object.keys(authData).length > 0 ? (
     <div className="">
       {/* <!-- ===== Page Wrapper Start ===== --> */}
       <div className="flex h-screen overflow-hidden">
@@ -24,7 +26,9 @@ const PrivateRoutes = () => {
 
           {/* <!-- ===== Main Content Start ===== --> */}
           <main>
-            <div className="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
+            <BreadCrumb />
+            <ToastContainer />
+            <div className="mx-auto max-w-screen-2xl p-4 md:p-4 2xl:p-8">
               <Outlet />
             </div>
           </main>

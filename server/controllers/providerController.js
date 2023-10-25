@@ -196,3 +196,35 @@ export const authProvider = asyncHandler(async (req, res) => {
   res.status(401);
   throw new Error("password does not match");
 });
+
+// @desc Get all documents
+// route GET /api/admin/providers
+// @access Private
+export const getAllProviders = asyncHandler(async (req, res) => {
+  try {
+    const providers = await Provider.find().select("-password");
+    if (!providers) throw new Error("Providers not found");
+    return res.status(200).json(providers);
+  } catch (error) {
+    res.status(400);
+    throw error;
+  }
+});
+
+// @desc Toggle Provider Status
+// route PUT /api/admin/providers/status-toggle
+// @access Private
+export const toggleProviderStatus = asyncHandler(async (req, res) => {
+  const { providerId } = req.body;
+  try {
+    const provider = await Provider.findById(providerId).select("-password");
+    if (!provider) throw new Error("provider not found");
+    provider.blocked = !provider.blocked;
+    const saved = await provider.save();
+    console.log(saved);
+    return res.status(200).json(saved);
+  } catch (error) {
+    res.status(400);
+    throw error;
+  }
+});

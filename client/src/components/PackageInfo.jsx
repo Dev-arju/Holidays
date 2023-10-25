@@ -8,7 +8,7 @@ const PackageInfo = ({ data }) => {
   return (
     <>
       <div className="hidden lg:flex justify-center w-full">
-        <div className="grid grid-cols-5 w-5/6 my-4 bg-bg-1 shadow-lg rounded-3xl overflow-hidden ">
+        <div className="grid grid-cols-5 w-5/6 my-4 bg-neutral-50 shadow-lg rounded-3xl overflow-hidden ">
           <div className="col-span-3 p-4 flex flex-col justify-center gap-1 font-body">
             <h2 className="font-bold text-lg">{data.packageName}</h2>
             <p className="font-medium text-sm text-gray-600 mb-1">{`${data.dayCount} days ${data.nightCount} night`}</p>
@@ -33,7 +33,7 @@ const PackageInfo = ({ data }) => {
                 Book now
               </Link>
               <Link
-                to="/packages/details"
+                to={`/packages/details/${data._id}`}
                 className="font-bold text-base focus:outline-none text-primary rounded-full ring-primary ring-1 px-8 py-2"
               >
                 see more
@@ -80,7 +80,7 @@ const PackageInfo = ({ data }) => {
                 Book now
               </Link>
               <Link
-                to="/packages/details"
+                to={`/packages/details/${data._id}`}
                 className="font-bold text-base focus:outline-none text-primary rounded-full ring-primary ring-1 px-8 py-2"
               >
                 see more

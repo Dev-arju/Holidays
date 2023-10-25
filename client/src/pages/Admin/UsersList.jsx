@@ -1,14 +1,12 @@
-import React, { useState, useEffect, useMemo, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import { Tooltip } from "react-tooltip";
-import { BsHouseAddFill } from "react-icons/bs";
 import { MdPublishedWithChanges } from "react-icons/md";
-import { FaEdit } from "react-icons/fa";
-import { BsFillCaretLeftFill, BsFillCaretRightFill } from "react-icons/bs";
-import { putRequest, getRequest, setAccessToken } from "../../utils/axios";
+import { Tooltip } from "react-tooltip";
+import { setAccessToken, getRequest, putRequest } from "../../utils/axios";
 import { toast } from "react-toastify";
+import { BsFillCaretLeftFill, BsFillCaretRightFill } from "react-icons/bs";
 
+import userAvatar from "../../assets/userAvatar.png";
 const TOOLTIP_STYLE = {
   paddingLeft: "8px",
   paddingRight: "8px",
@@ -20,32 +18,35 @@ const TOOLTIP_STYLE = {
   color: " rgb(30 64 175)",
 };
 
-const Properties = () => {
-  const { authData } = useSelector((state) => state.provider);
+const UsersList = () => {
+  const { authData } = useSelector((state) => state.admin);
   const [modal, setModal] = useState({ active: false, payload: "" });
-  const [properties, setProperties] = useState([]);
+  const [users, setUsers] = useState([]);
   const [currPage, setCurrPage] = useState(1);
   const pagination = useRef(null);
   const totalPages = useMemo(() => {
-    return Math.ceil(properties.length / 5);
-  }, [properties.length]);
+    return Math.ceil(users.length / 5);
+  }, [users.length]);
+  const fetchUsers = async () => {
+    console.log(authData.token);
+    setAccessToken(authData.token);
+    const response = await getRequest("/admin/users");
+    if (response.data) {
+      setUsers(response.data);
+    }
+    if (response.error) {
+      document.getElementById("isEmpty").classList.replace("hidden", "flex");
+      toast.error(response.error.message);
+      console.log(response.error.message || response.message);
+    }
+  };
 
   useEffect(() => {
-    const getAllProperties = async () => {
-      setAccessToken(authData.token);
-      const response = await getRequest("/provider/property");
-      if (response.data) {
-        setProperties(response.data);
-      }
-      if (response.error) {
-        document.getElementById("isEmpty").classList.replace("hidden", "flex");
-        console.log(response.error.message || response.message);
-      }
-    };
-    getAllProperties();
+    fetchUsers();
   }, []);
 
   useEffect(() => {
+    if (pagination.current) pagination.current.innerHTML = "";
     for (let i = 1; i <= totalPages; i++) {
       let child = document.createElement("p");
       child.onclick = pageClick;
@@ -59,9 +60,6 @@ const Properties = () => {
       }
       pagination.current.appendChild(child);
     }
-    return () => {
-      window.removeEventListener("click", pageClick);
-    };
   }, [totalPages, currPage]);
 
   function pageClick(e) {
@@ -72,89 +70,95 @@ const Properties = () => {
 
   const statusChange = async (e) => {
     e.stopPropagation();
-    const response = await putRequest(`/provider/property/${modal.payload}`);
-    if (response.data) {
-      setProperties((prev) => {
-        return prev.map((property) => {
-          if (property._id === modal.payload) {
-            return { ...property, isAvailable: !property.isAvailable };
+    console.log(modal);
+    const { data, error } = await putRequest("/admin/users/status-toggle", {
+      userId: modal.payload,
+    });
+    if (data) {
+      setUsers((prev) => {
+        return prev.map((user) => {
+          if (user._id === data._id) {
+            return data;
           }
-          return property;
+          return user;
         });
       });
-      toast.success("property status changed");
     }
-    if (response.error) {
-      console.log(response.error);
-      toast.error(response.error.message || response.message);
+    if (error) {
+      console.log(error.message);
+      toast.error(error.message);
     }
-
-    setModal({ active: !modal.active, payload: "" });
+    setModal({ active: false, payload: "" });
   };
 
   return (
     <>
-      <div className="flex justify-between mx-4 px-4 py-2 items-center">
-        <div className="font-tabs text-2xl">Your Properties Listed</div>
-        <Link
-          to="add"
-          data-tooltip-id="addProperty"
-          data-tooltip-content="List New Property"
-          className="p-2 rounded-full bg-primary text-secondary text-2xl"
-        >
-          <BsHouseAddFill />
-        </Link>
-        <Tooltip style={TOOLTIP_STYLE} id="addProperty" place="bottom-start" />
+      <div className="flex justify-between mx-4 px-4 items-center">
+        <div className="font-body font-bold text-2xl">Users</div>
+        {/* <Link
+            to="add"
+            data-tooltip-id="a"
+            data-tooltip-content="List New Property"
+            className="p-2 rounded-full bg-primary text-secondary text-2xl"
+          >
+            <BsHouseAddFill />
+          </Link>
+          <Tooltip style={TOOLTIP_STYLE} id="a" place="bottom-start" /> */}
       </div>
-      <div className="mt-2 pt-2 overflow-x-auto">
-        {properties.length > 0 ? (
+      <div className="mt-2 overflow-x-auto">
+        {users.length > 0 ? (
           <table className="min-w-full table-auto text-center text-sm font-light">
             <thead className="border-b bg-neutral-50 shadow-inner font-medium">
               <tr>
-                <th scope="col" className="px-6 py-4">
-                  Property Name
+                <th scope="col" className="px-2 py-4">
+                  Avatar
                 </th>
                 <th scope="col" className="px-6 py-4">
-                  Location
+                  Name
                 </th>
                 <th scope="col" className="px-6 py-4">
-                  Booking Availability
+                  Email
                 </th>
+
                 <th scope="col" className="px-6 py-4">
-                  Price Plan Count
+                  status
                 </th>
-                <th scope="col" className="px-6 py-4"></th>
+                {/* <th scope="col" className="px-6 py-4"></th> */}
                 <th scope="col" className="px-6 py-4"></th>
               </tr>
             </thead>
             <tbody>
-              {properties.map((property, index) => {
+              {users.map((user, index) => {
                 if ((currPage - 1) * 5 > index || currPage * 5 < index + 1) {
                   return;
                 }
                 return (
-                  <tr className="border-b" key={property._id}>
-                    <td className="whitespace-nowrap px-6 py-4 font-medium">
-                      {property.propertyName}
+                  <tr className="border-b" key={user._id}>
+                    <td className="whitespace-nowrap px-2 py-4 font-medium">
+                      <img
+                        src={user.avatar ? user.avatar : userAvatar}
+                        alt=""
+                        className="aspect-square w-10 mx-auto rounded-full"
+                      />
                     </td>
                     <td className="whitespace-nowrap font-normal px-6 py-4">
-                      {property.propertyLocation}
+                      {user.name}
+                    </td>
+                    <td className="whitespace-nowrap font-normal px-6 py-4">
+                      {user.email}
                     </td>
                     <td
                       className={
-                        property.isAvailable
+                        user.isActive
                           ? "whitespace-nowrap font-normal text-green-800 px-6 py-4"
                           : "whitespace-nowrap font-normal text-red-800 px-6 py-4"
                       }
                     >
-                      {property.isAvailable ? "available" : "unavailable"}
-                    </td>
-                    <td className="whitespace-nowrap font-normal px-6 py-4">
-                      {property.priceOptions.length}
+                      {user.isActive ? "available" : "unavailable"}
                     </td>
 
-                    <td className="whitespace-nowrap px-6 py-4">
-                      <Link to={`edit/${property._id}`}>
+                    {/* <td className="whitespace-nowrap px-6 py-4">
+                      <Link to={`edit/${user._id}`}>
                         <FaEdit className="text-base cursor-pointer focus:outline-none view-form" />
                       </Link>
                       <Tooltip
@@ -163,14 +167,18 @@ const Properties = () => {
                         anchorSelect=".view-form"
                         content="view/edit details"
                       />
-                    </td>
+                    </td> */}
                     <td className="whitespace-nowrap px-6 py-4">
                       <MdPublishedWithChanges
-                        className="text-lg text-blue-800 cursor-pointer availability focus:outline-none"
+                        className={
+                          user.isActive
+                            ? "text-lg text-red-600 cursor-pointer availability focus:outline-none"
+                            : "text-lg text-green-400 cursor-pointer availability focus:outline-none"
+                        }
                         onClick={() =>
                           setModal({
                             active: !modal.active,
-                            payload: property._id,
+                            payload: user._id,
                           })
                         }
                       />
@@ -178,7 +186,7 @@ const Properties = () => {
                         style={TOOLTIP_STYLE}
                         place="bottom-end"
                         anchorSelect=".availability"
-                        content="change property status"
+                        content="change user status"
                       />
                     </td>
                   </tr>
@@ -192,23 +200,20 @@ const Properties = () => {
             className="hidden w-full h-96 flex-col justify-center items-center bg-neutral-100 rounded-md shadow-md"
           >
             <h2 className="font-serif font-semibold text-2xl text-center text-primary">
-              Properties Not Found
+              Users Not Found
             </h2>
             <div className="flex justify-center items-center gap-4">
-              <span className="text-sm font-title">
-                if you wish to add new property
-              </span>
-              <Link
-                to="/provider/properties/add"
-                className="outline-none font-body text-primary "
+              <button
+                onClick={fetchUsers}
+                className="outline-none mt-2 font-tabs text-blue-600 hover:underline "
               >
-                Click here
-              </Link>
+                refresh
+              </button>
             </div>
           </div>
         )}
       </div>
-      {properties.length > 0 && (
+      {users.length > 0 && (
         <div className="flex justify-end items-center mr-8 mt-8">
           <p className="w-6 text-center text-base font-bold ">
             <BsFillCaretLeftFill
@@ -228,9 +233,7 @@ const Properties = () => {
       {modal.active && (
         <div className="fixed top-0 left-0 lg:ml-28 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white px-8 py-4 rounded-md shadow-md">
-            <p className="h-12 font-title">
-              If you wish to change property status
-            </p>
+            <p className="h-12 font-title">Confirm to change user status</p>
             <h1 className="text-center font-serif text-blue-900">
               Are you sure?
             </h1>
@@ -255,4 +258,4 @@ const Properties = () => {
   );
 };
 
-export default Properties;
+export default UsersList;

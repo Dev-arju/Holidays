@@ -41,6 +41,8 @@ export const addNewPackage = asyncHandler(async (req, res) => {
         .split("/")
         .slice(2)
         .join("/")}/${stayImage[0]?.filename}`;
+    } else {
+      day.accomodation.image = "";
     }
     if (activityImages.length > 0) {
       day.activity.forEach((item, i) => {
@@ -134,7 +136,7 @@ export const getPackages = asyncHandler(async (req, res) => {
 
 // @desc Send Single Package Details
 // route GET /api/users/booking/:packageId
-// @access Private
+// @access Public
 export const getSinglePackageDetails = asyncHandler(async (req, res) => {
   const { packageId } = req.params;
   try {
