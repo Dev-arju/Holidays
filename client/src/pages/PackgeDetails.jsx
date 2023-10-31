@@ -21,6 +21,7 @@ const PackgeDetails = () => {
 
   useEffect(() => {
     (async () => {
+      window.scrollTo(0, 0);
       const { data, error } = await getRequest(`/users/booking/${packageId}`);
       if (data) {
         setPackageData(data);

@@ -5,6 +5,7 @@ import {
   googleSign,
 } from "../controllers/userController.js";
 import {
+  getLatest,
   getPackages,
   getSinglePackageDetails,
 } from "../controllers/packageController.js";
@@ -19,6 +20,7 @@ import { protect } from "../middleware/authMiddleware.js";
 const router = express.Router();
 
 router.post("/", registerUser);
+router.get("/latest", getLatest);
 router.get("/bookings", protect, getUserBookings);
 router.get("/booking/:packageId", getSinglePackageDetails);
 router.get("/packages", getPackages);

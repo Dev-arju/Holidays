@@ -118,9 +118,8 @@ export const getAllPackages = asyncHandler(async (req, res) => {
 export const getPackages = asyncHandler(async (req, res) => {
   const { search } = req.query;
   let packages;
-  console.log(search);
   try {
-    if (search === "") {
+    if (search === "" || search === undefined) {
       packages = await Package.find({}).populate("provider", "brandName");
     } else {
       packages = await Package.find({ packageName: search });
@@ -150,6 +149,65 @@ export const getSinglePackageDetails = asyncHandler(async (req, res) => {
   } catch (error) {
     console.log(error);
     return res.status(400).json(error);
+  }
+});
+
+// @desc Send Latest 5 packages
+// route GET /api/users/latest
+// @access Public
+export const getLatest = asyncHandler(async (req, res) => {
+  try {
+    const latest = await Package.find()
+      .sort({ _id: -1 })
+      .limit(5)
+      .populate("provider", "brandName");
+    if (!latest) throw new Error("packages not found");
+    return res.status(200).json(latest);
+  } catch (error) {
+    res.status(404);
+    throw error;
+  }
+});
+
+// @desc Set Banner Packages
+// route PUT /api/admin/banner/set
+// @access Private
+export const setBanner = asyncHandler(async (req, res) => {
+  const { packageId, status } = req.body;
+  try {
+    if (status) {
+      const selected = await Package.find({ banner: true });
+      if (selected && selected.length >= 5)
+        throw new Error("maximum banner options reached");
+    }
+
+    const processed = await Package.updateOne(
+      { _id: packageId },
+      { $set: { banner: status } }
+    );
+    return res.status(200).json(processed);
+  } catch (error) {
+    res.status(403);
+    throw error;
+  }
+});
+
+// @desc Change Package Availability
+// route PUT /api/admin/package/availability || /api/provider/package/availability
+// @access Private
+export const toggleAvailability = asyncHandler(async (req, res) => {
+  const { packageId } = req.body;
+  try {
+    const exist = await Package.findById(packageId);
+    if (!exist) throw new Error("given id not matches any records");
+
+    exist.isAvailable = !exist.isAvailable;
+    const saved = await exist.save();
+    if (!saved) throw new Error("operation failed");
+    return res.status(200).json(saved);
+  } catch (error) {
+    res.status(404);
+    throw error;
   }
 });
 

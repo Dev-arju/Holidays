@@ -2,15 +2,13 @@ import React from "react";
 import LogoIcon from "./LogoIcon";
 import { BsCurrencyRupee } from "react-icons/bs";
 
-const Invoice = React.forwardRef(({ doc }, ref) => {
+const Invoice = ({ doc }) => {
   return (
     <div
-      style={{ aspectRatio: "1 / 1.4" }}
-      onClick={(e) => e.stopPropagation()}
-      ref={ref}
-      className="h-full text-center bg-white shadow-sm mx-auto p-14"
+      style={{ aspectRatio: "1 / 1.294" }}
+      className="h-full text-center bg-white shadow-sm mx-auto p-16"
     >
-      <div className="w-full h-full border border-gray-400 font-body">
+      <div className="w-full h-full font-body">
         <div className="title flex flex-wrap justify-between items-center px-4">
           <LogoIcon />
 
@@ -23,7 +21,7 @@ const Invoice = React.forwardRef(({ doc }, ref) => {
             </p>
           </div>
         </div>
-        <p className="px-2 font-medium text-xs py-1 text-end mt-4 bg-neutral-50 text-black/60">
+        <p className=" font-medium text-xs  flex justify-end items-center px-4 py-1 mt-8 bg-neutral-50 text-black/80">
           date:{" "}
           {doc.createdAt
             ? new Date(doc.createdAt).toLocaleDateString("en-US", {
@@ -71,9 +69,9 @@ const Invoice = React.forwardRef(({ doc }, ref) => {
           </table>
         </div>
         <hr className="border border-gray-500 w-11/12 mx-auto" />
-        <div className="text-right px-4 pt-2.5 font-bold">
+        <div className="flex justify-end items-center gap-2 px-4 pt-2.5 font-bold">
           Total
-          <span className="ms-2">
+          <span className="">
             <BsCurrencyRupee className="inline-block m-auto" />
             {doc.packageId.price}
           </span>
@@ -121,5 +119,5 @@ const Invoice = React.forwardRef(({ doc }, ref) => {
       </div>
     </div>
   );
-});
+};
 export default Invoice;

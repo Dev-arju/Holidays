@@ -33,6 +33,7 @@ import AdminAuth from "./pages/Admin/Auth";
 import ProviderList from "./pages/Admin/ProviderList";
 import UsersList from "./pages/Admin/UsersList";
 import AdminBookings from "./pages/Admin/Bookings";
+import PackageListingAdmin from "./pages/Admin/Packages";
 
 /** Components */
 import NotFound from "./components/NotFound";
@@ -101,6 +102,7 @@ function App() {
           <Route path="providers" element={<ProviderList />} />
           <Route path="users" element={<UsersList />} />
           <Route path="bookings" element={<AdminBookings />} />
+          <Route path="packages" element={<PackageListingAdmin />} />
         </Route>
         <Route path="auth" element={<AdminAuth />} />
       </Route>
